@@ -16,14 +16,8 @@ return {
         desc = 'Copilot: Accept',
       })
 
-      -- Dismiss suggestions
-      -- ESC: dismiss and leave insert mode
-      vim.keymap.set('i', '<Esc>', function()
-        pcall(vim.fn['copilot#Dismiss'])
-        return vim.api.nvim_replace_termcodes('<Esc>', true, false, true)
-      end, { expr = true, silent = true, desc = 'Copilot: Dismiss + Exit insert' })
-      -- Ctrl-]: dismiss only, stay in insert
-      vim.keymap.set('i', '<C-]>', function()
+      -- Dismiss suggestions: Ctrl-\ to dismiss and stay in insert
+      vim.keymap.set('i', '<C-\\>', function()
         pcall(vim.fn['copilot#Dismiss'])
         return ''
       end, { expr = true, silent = true, desc = 'Copilot: Dismiss' })
