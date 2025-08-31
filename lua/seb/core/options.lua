@@ -30,7 +30,7 @@ vim.o.splitright = true -- force all vertical splits to go to the right of curre
 vim.o.swapfile = false -- creates a swapfile
 vim.o.smartindent = true -- make indenting smarter again
 vim.o.showmode = false -- we don't need to see things like -- INSERT -- anymore
-vim.o.showtabline = 2 -- always show tabs
+vim.o.showtabline = 1 -- show tabs only when needed
 vim.o.backspace = 'indent,eol,start' -- allow backspace on
 vim.o.pumheight = 10 -- pop up menu height
 vim.o.conceallevel = 0 -- so that `` is visible in markdown files
@@ -42,3 +42,14 @@ vim.opt.iskeyword:append '-' -- hyphenated words recognized by searches
 vim.opt.formatoptions:remove { 'c', 'r', 'o' } -- don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
 vim.opt.inccommand = 'split'
 
+-- Diagnostic sign icons (Neovim 0.11+ way; avoid :sign define)
+vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = ' ',
+      [vim.diagnostic.severity.WARN] = ' ',
+      [vim.diagnostic.severity.HINT] = ' ',
+      [vim.diagnostic.severity.INFO] = ' ',
+    },
+  },
+})

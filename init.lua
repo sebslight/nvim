@@ -1,4 +1,5 @@
-vim.g.mapleader = " "
-vim.g.localeader = " "
-require("seb.core")
-require("seb.lazy")
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+vim.g.have_nerd_font = true
+require 'seb.core'
+require 'seb.lazy'

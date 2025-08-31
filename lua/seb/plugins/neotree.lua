@@ -2,6 +2,12 @@ return {
   'nvim-neo-tree/neo-tree.nvim',
   event = 'VeryLazy',
   branch = 'v3.x',
+  cmd = { 'Neotree' },
+  keys = {
+    { '<leader>ef', ':Neotree toggle float<CR>', silent = true, desc = 'Explorer: Toggle float' },
+    { '<leader>ee', ':Neotree toggle position=left<CR>', silent = true, desc = 'Explorer: Toggle left' },
+    { '<leader>eg', ':Neotree float git_status<CR>', silent = true, desc = 'Explorer: Git status' },
+  },
   dependencies = {
     'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-web-devicons',
@@ -21,15 +27,10 @@ return {
               filetype = { 'neo-tree', 'neo-tree-popup', 'notify' },
               -- if the buffer type is one of following, the window will be ignored
               buftype = { 'terminal', 'quickfix' },
-            }
+            },
           },
         }
       end,
-      keys = {
-        { '<leader>w', ':Neotree toggle float<CR>', silent = true, desc = 'Float File Explorer' },
-        { '<leader>e', ':Neotree toggle position=left<CR>', silent = true, desc = 'Left File Explorer' },
-        { '<leader>ngs', ':Neotree float git_status<CR>', silent = true, desc = 'Neotree Open Git Status Window' },
-      },
     },
   },
   config = function()
@@ -68,12 +69,13 @@ return {
           expander_highlight = 'NeoTreeExpander',
         },
         icon = {
-          folder_closed = '',
-          folder_open = '',
-          folder_empty = '󰜌',
-          -- The next two settings are only a fallback, if you use nvim-web-devicons and configure default icons there
-          -- then these will never be used.
-          default = '*',
+          -- Use a Nerd Font v2-friendly set of icons
+          folder_closed = '',
+          folder_open = '',
+          folder_empty = '',
+          folder_empty_open = '',
+          -- Fallback icon if devicons has no match
+          default = '',
           highlight = 'NeoTreeFileIcon',
         },
         modified = {
@@ -88,15 +90,15 @@ return {
         git_status = {
           symbols = {
             -- Change type
-            added = '', -- or "✚", but this is redundant info if you use git_status_colors on the name
-            modified = '', -- or "", but this is redundant info if you use git_status_colors on the name
-            deleted = '✖', -- this can only be used in the git_status source
-            renamed = '󰁕', -- this can only be used in the git_status source
+            added = '',
+            modified = '',
+            deleted = '',
+            renamed = '➜',
             -- Status type
             untracked = '',
-            ignored = '',
-            unstaged = '󰄱',
-            staged = '',
+            ignored = '◌',
+            unstaged = '✗',
+            staged = '✓',
             conflict = '',
           },
         },
@@ -308,6 +310,7 @@ return {
       },
     }
 
-    vim.cmd [[nnoremap \ :Neotree reveal<cr>]]
+    -- Reveal current file with backslash (non-leader)
+    vim.keymap.set('n', '\\', ':Neotree reveal<CR>', { silent = true, desc = 'Neo-tree: Reveal current file' })
   end,
 }
