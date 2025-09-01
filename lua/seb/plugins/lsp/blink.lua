@@ -12,7 +12,10 @@ return {
       keymap = {
         -- Use the 'enter' preset to accept with <CR>
         preset = "enter",
+        -- Dismiss menu: Ctrl-] cancels (reverts any preview)
+        ["<C-]>"] = { "cancel" },
         -- Close the menu and revert any auto_insert preview
+        -- If menu is open: cancel; then fallback Esc to exit Insert mode
         ["<Esc>"] = { "cancel", "fallback" },
         -- Explicitly open completion
         ["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
