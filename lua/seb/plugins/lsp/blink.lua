@@ -3,6 +3,10 @@ return {
     "saghen/blink.cmp",
     event = { "InsertEnter", "CmdlineEnter" },
     version = "*",
+    dependencies = {
+      -- Integrate GitHub Copilot into blink.cmp's completion menu
+      { "fang2hou/blink-copilot" },
+    },
     opts = {
       -- Feature-rich default experience
       keymap = {
@@ -31,7 +35,19 @@ return {
       },
       sources = {
         -- default providers; lazydev source is injected by lazydev plugin spec
-        default = { "lsp", "path", "snippets", "buffer" },
+        -- Add Copilot as a source via the native blink-copilot provider
+        default = { "lsp", "path", "snippets", "buffer", "copilot" },
+        providers = {
+          copilot = {
+            name = "copilot",
+            module = "blink-copilot",
+            -- Make Copilot suggestions easy to notice without overwhelming others
+            score_offset = 100,
+            async = true,
+            -- You can fine-tune blink-copilot options here, e.g.:
+            -- opts = { max_completions = 3, max_attempts = 4 },
+          },
+        },
       },
       -- Enable signature help by default
       signature = { enabled = true },

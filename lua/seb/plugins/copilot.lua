@@ -1,36 +1,23 @@
 return {
   {
     'github/copilot.vim',
-    -- Load early so statusline can reflect Copilot state immediately
-    event = 'VeryLazy',
+    -- Attach Copilot's LSP without showing inline ghost text; integrate via blink.cmp
+    event = 'BufWinEnter',
+    init = function()
+      -- Disable default mappings and inline accept flow; blink.cmp will be the UI
+      vim.g.copilot_no_maps = true
+    end,
     config = function()
-      -- Use <Tab> to accept when visible, otherwise insert a literal Tab
-      vim.g.copilot_no_tab_map = true
-      vim.g.copilot_assume_mapped = true
-
-      -- Accept with <Tab> (falls back to a literal Tab when no suggestion)
-      vim.keymap.set('i', '<Tab>', 'copilot#Accept("\t")', {
-        expr = true,
-        silent = true,
-        replace_keycodes = false,
-        desc = 'Copilot: Accept',
+      -- Block normal Copilot inline suggestions but keep the LSP client active
+      local group = vim.api.nvim_create_augroup('github_copilot', { clear = true })
+      vim.api.nvim_create_autocmd({ 'FileType', 'BufUnload' }, {
+        group = group,
+        callback = function(args)
+          vim.fn['copilot#On' .. args.event]()
+        end,
       })
-
-      -- Dismiss suggestions: Ctrl-\ to dismiss and stay in insert
-      vim.keymap.set('i', '<C-\\>', function()
-        pcall(vim.fn['copilot#Dismiss'])
-        return ''
-      end, { expr = true, silent = true, desc = 'Copilot: Dismiss' })
-
-      -- Cycle suggestions
-      vim.keymap.set('i', '<M-]>', 'copilot#Next()', { expr = true, silent = true, desc = 'Copilot: Next' })
-      vim.keymap.set('i', '<M-[>', 'copilot#Previous()', { expr = true, silent = true, desc = 'Copilot: Previous' })
-
-      -- Ensure Copilot is enabled on startup so it's immediately active
-      -- Schedule to avoid race conditions during very early init
-      vim.schedule(function()
-        pcall(vim.cmd, 'Copilot enable')
-      end)
+      -- Ensure Copilot's LSP attaches for the current buffer
+      pcall(vim.fn['copilot#OnFileType'])
     end,
     keys = {
       { '<leader>ie', ':Copilot enable<CR>', mode = 'n', desc = 'Copilot: Enable' },
